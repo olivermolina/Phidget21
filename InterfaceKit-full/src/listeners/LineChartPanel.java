@@ -35,7 +35,7 @@ public class LineChartPanel extends JPanel {
     private JFXPanel fxPanel;
     private XYChart.Series<Number, Number> series;
     private ExecutorService executor;
-    private int xSeriesData = 0;
+    private int xSeriesData;
     private ConcurrentLinkedQueue<Number> ySeriesData;
     private int maxValu;
     int Resolution_ms = 30;
@@ -52,16 +52,22 @@ public class LineChartPanel extends JPanel {
         initComponents();
     }
 
+    //Initiliaze required components
     private void initComponents() {
         fxPanel = new JFXPanel();
         fxPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
         series = new XYChart.Series<>();
         ySeriesData = new ConcurrentLinkedQueue<>();
+        xSeriesData = 0;
         this.add(fxPanel);
+
+        //Required to implement the JavaFx panel to run with SwingWorkers
         Platform.runLater(new Runnable() {
 
             @Override
             public void run() {
+
+                //The tooltip message when you hover the line
                 Tooltip t = new Tooltip();
                 t.setOnShowing(e -> {
                     Point2D screen = (Point2D) t.getProperties().get(MOUSE_TRIGGER_LOCATION);
@@ -73,15 +79,19 @@ public class LineChartPanel extends JPanel {
                     double localY = chart.getYAxis().screenToLocal(screen).getY();
                     Object xValue = chart.getXAxis().getValueForDisplay(localX);
                     Object yValue = chart.getYAxis().getValueForDisplay(localY);
-                    String s = String.valueOf(yValue);
-                    double d = Double.parseDouble(s);
-                    int i = (int) d;
+                    String s = String.valueOf(yValue); // the Y value as String data type
+                    double d = Double.parseDouble(s); // the Y value as Double data type
+                    int i = (int) d; // the Y value as Integer data type
+
+                    //Initialize DateTimestamp
                     Calendar calendar = Calendar.getInstance();
                     Date now = calendar.getTime();
                     Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
                     t.textProperty().set("Vertical Y value: " + i + "\n"
                             + "Timestamp: " + currentTimestamp.toString());
                 });
+
+                //Listener when you hover the linechart to show the tooltip
                 series.nodeProperty().addListener(new ChangeListener<Node>() {
                     @Override
                     public void changed(ObservableValue<? extends Node> arg0, Node arg1,
@@ -95,8 +105,11 @@ public class LineChartPanel extends JPanel {
                     }
                 });
 
+                //Construct xAxis 
                 xAxis = new NumberAxis();
                 xAxis.setLabel("Trace Count");
+
+                //Construct yAxis 
                 yAxis = new NumberAxis();
                 yAxis.setLabel("Analog In Values");
 
@@ -139,6 +152,7 @@ public class LineChartPanel extends JPanel {
         global_vars.Yoffset = offset;
     }
 
+    //Method to start/restart drawing the linechart
     public void start() {
         if (global_vars.MaxX == 0) {
             global_vars.MaxX = 1000;
@@ -155,6 +169,8 @@ public class LineChartPanel extends JPanel {
         if (global_vars.Resolution_ms == 0) {
             global_vars.Resolution_ms = Resolution_ms;
         }
+
+        //provides methods to manage termination and methods that can produce a Future for tracking progress of one or more asynchronous task
         executor = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -164,6 +180,8 @@ public class LineChartPanel extends JPanel {
             }
         });
 
+        //Populate Y values in linechart
+        //Equivalent to while loop
         AddToQueue addToQueue = new AddToQueue();
         executor.execute(addToQueue);
 
@@ -172,10 +190,12 @@ public class LineChartPanel extends JPanel {
 
     }
 
+    //Stop the linechart to draw lines
     public void stop() {
         executor.shutdownNow();
     }
 
+    //Reset the linechart
     public void reset() {
         removeAll();
         initComponents();
@@ -183,6 +203,7 @@ public class LineChartPanel extends JPanel {
         repaint();
     }
 
+    //Method to populate the Y value
     private class AddToQueue implements Runnable {
 
         public void run() {
@@ -221,6 +242,7 @@ public class LineChartPanel extends JPanel {
         }.start();
     }
 
+    //Initialize series(X and Y) and plot node in the linechart
     private void addDataToSeries() {
 
         for (int i = 0; i < global_vars.MaxX; i++) {
@@ -229,14 +251,6 @@ public class LineChartPanel extends JPanel {
             }
             Number yData = ySeriesData.remove();
             Data data = new XYChart.Data<>(xSeriesData++, yData);
-            data.nodeProperty().addListener(new ChangeListener<Node>() {
-                @Override
-                public void changed(ObservableValue<? extends Node> arg0, Node arg1, Node arg2) {
-                    Tooltip t = new Tooltip("Tooltip: " + yData + '\n' + xSeriesData);
-                    Tooltip.install(arg2, t);
-                    data.nodeProperty().removeListener(this);
-                }
-            });
             series.getData().add(data);
         }
     }
