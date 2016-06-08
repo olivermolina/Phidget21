@@ -14,6 +14,7 @@ package listeners;
 
 import com.phidgets.InterfaceKitPhidget;
 import com.phidgets.PhidgetException;
+import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import com.phidgets.event.SensorChangeListener;
@@ -43,7 +44,7 @@ public class InterfaceKit extends javax.swing.JFrame {
      * Creates new form InterfaceKit
      */
     public InterfaceKit() {
-        initComponents();
+	initComponents();
     }
 
     /**
@@ -133,6 +134,7 @@ public class InterfaceKit extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("InterfaceKit - full");
+        setPreferredSize(new java.awt.Dimension(1000, 800));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -802,61 +804,61 @@ public class InterfaceKit extends javax.swing.JFrame {
      */
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 
-        makeDigiInArray();
-        makeDigiOutArray();
-        makeSensorInArray();
+	makeDigiInArray();
+	makeDigiOutArray();
+	makeSensorInArray();
 
-        this.ratioChk.setEnabled(false);
-        this.ratioChk.setSelected(false);
+	this.ratioChk.setEnabled(false);
+	this.ratioChk.setSelected(false);
 
-        this.jLabel8.setVisible(true);
-        this.sensitivityTxt.setText("");
-        this.sensitivityTxt.setVisible(true);
-        this.sensitivityScrl.setEnabled(false);
-        this.sensitivityScrl.setVisible(true);
+	this.jLabel8.setVisible(true);
+	this.sensitivityTxt.setText("");
+	this.sensitivityTxt.setVisible(true);
+	this.sensitivityScrl.setEnabled(false);
+	this.sensitivityScrl.setVisible(true);
 
-        try {
-            ifk = new InterfaceKitPhidget();
+	try {
+	    ifk = new InterfaceKitPhidget();
 
-            attach_listener = new IFKitAttachListener(this, this.attachedTxt, this.nameTxt,
-                    this.serialTxt, this.versionTxt, this.numDigiInTxt, this.numDigiOutTxt,
-                    this.numSensorTxt, this.digiInArray, this.digiOutArray, this.sensorInArray,
-                    this.ratioChk, this.jLabel8, this.sensitivityTxt, this.sensitivityScrl);
+	    attach_listener = new IFKitAttachListener(this, this.attachedTxt, this.nameTxt,
+		    this.serialTxt, this.versionTxt, this.numDigiInTxt, this.numDigiOutTxt,
+		    this.numSensorTxt, this.digiInArray, this.digiOutArray, this.sensorInArray,
+		    this.ratioChk, this.jLabel8, this.sensitivityTxt, this.sensitivityScrl);
 
-            detach_listener = new IFKitDetachListener(this, this.attachedTxt, this.nameTxt,
-                    this.serialTxt, this.versionTxt, this.numDigiInTxt, this.numDigiOutTxt,
-                    this.numSensorTxt, this.digiInArray, this.digiOutArray, this.sensorInArray,
-                    this.ratioChk, this.jLabel8, this.sensitivityTxt, this.sensitivityScrl);
+	    detach_listener = new IFKitDetachListener(this, this.attachedTxt, this.nameTxt,
+		    this.serialTxt, this.versionTxt, this.numDigiInTxt, this.numDigiOutTxt,
+		    this.numSensorTxt, this.digiInArray, this.digiOutArray, this.sensorInArray,
+		    this.ratioChk, this.jLabel8, this.sensitivityTxt, this.sensitivityScrl);
 
-            error_listener = new IFKitErrorListener(this);
+	    error_listener = new IFKitErrorListener(this);
 
-            input_listener = new IFKitInputChangeListener(this, this.digiInArray);
+	    input_listener = new IFKitInputChangeListener(this, this.digiInArray);
 
-            output_listener = new IFKitOutputChangeListener(this, this.digiOutArray);
+	    output_listener = new IFKitOutputChangeListener(this, this.digiOutArray);
 
-            sensor_listener = new IFKitSensorChangeListener(this, this.sensorInArray);
+	    sensor_listener = new IFKitSensorChangeListener(this, this.sensorInArray);
 
-            ifk.addAttachListener(attach_listener);
-            ifk.addDetachListener(detach_listener);
-            ifk.addErrorListener(error_listener);
+	    ifk.addAttachListener(attach_listener);
+	    ifk.addDetachListener(detach_listener);
+	    ifk.addErrorListener(error_listener);
 
-            ifk.addInputChangeListener(input_listener);
-            ifk.addOutputChangeListener(output_listener);
-            ifk.addSensorChangeListener(sensor_listener);
+	    ifk.addInputChangeListener(input_listener);
+	    ifk.addOutputChangeListener(output_listener);
+	    ifk.addSensorChangeListener(sensor_listener);
 
             //This assumes that if there is a command line argument, it is a serial number
-            //and we try to open that specific device. Otherwise, open any device.
-            if ((runArgs.length > 1) && (runArgs[1].equals("remote"))) {
-                ifk.open(Integer.parseInt(runArgs[0]), null);
-            } else if (runArgs.length > 0) {
-                ifk.open(Integer.parseInt(runArgs[0]));
-            } else {
-                ifk.openAny();
-            }
+	    //and we try to open that specific device. Otherwise, open any device.
+	    if ((runArgs.length > 1) && (runArgs[1].equals("remote"))) {
+		ifk.open(Integer.parseInt(runArgs[0]), null);
+	    } else if (runArgs.length > 0) {
+		ifk.open(Integer.parseInt(runArgs[0]));
+	    } else {
+		ifk.openAny();
+	    }
 
-        } catch (PhidgetException ex) {
-            JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
-        }
+	} catch (PhidgetException ex) {
+	    JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
+	}
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -864,42 +866,42 @@ public class InterfaceKit extends javax.swing.JFrame {
      *
      */
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        try {
-            //unhook the event listeners
-            ifk.removeSensorChangeListener(sensor_listener);
-            ifk.removeOutputChangeListener(output_listener);
-            ifk.removeInputChangeListener(input_listener);
+	try {
+	    //unhook the event listeners
+	    ifk.removeSensorChangeListener(sensor_listener);
+	    ifk.removeOutputChangeListener(output_listener);
+	    ifk.removeInputChangeListener(input_listener);
 
-            ifk.removeErrorListener(error_listener);
-            ifk.removeDetachListener(detach_listener);
-            ifk.removeAttachListener(attach_listener);
+	    ifk.removeErrorListener(error_listener);
+	    ifk.removeDetachListener(detach_listener);
+	    ifk.removeAttachListener(attach_listener);
 
-            //close the phidget
-            ifk.close();
+	    //close the phidget
+	    ifk.close();
 
-            ifk = null;
+	    ifk = null;
 
-            dispose();
-            System.exit(0);
-        } catch (PhidgetException ex) {
-            JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
-            dispose();
-            System.exit(0);
-        }
+	    dispose();
+	    System.exit(0);
+	} catch (PhidgetException ex) {
+	    JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
+	    dispose();
+	    System.exit(0);
+	}
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        // TODO add your handling code here:
+	// TODO add your handling code here:
     }//GEN-LAST:event_formWindowActivated
 
     private void ratioChkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ratioChkActionPerformed
-        if (ratioChk.isEnabled()) {
-            try {
-                ifk.setRatiometric(ratioChk.isSelected());
-            } catch (PhidgetException ex) {
-                JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
-            }
-        }
+	if (ratioChk.isEnabled()) {
+	    try {
+		ifk.setRatiometric(ratioChk.isSelected());
+	    } catch (PhidgetException ex) {
+		JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
+	    }
+	}
     }//GEN-LAST:event_ratioChkActionPerformed
 
     /**
@@ -913,69 +915,69 @@ public class InterfaceKit extends javax.swing.JFrame {
      */
     private void DigiOutCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DigiOutCheckActionPerformed
 
-        JCheckBox outputChk = (JCheckBox) evt.getSource();
+	JCheckBox outputChk = (JCheckBox) evt.getSource();
 
-        if (outputChk.isEnabled()) {
-            try {
-                for (int i = 0; i < 16; i++) {
-                    if (digiOutArray[i].equals(outputChk)) {
+	if (outputChk.isEnabled()) {
+	    try {
+		for (int i = 0; i < 16; i++) {
+		    if (digiOutArray[i].equals(outputChk)) {
 
-                        ifk.setOutputState(i, digiOutArray[i].isSelected());
+			ifk.setOutputState(i, digiOutArray[i].isSelected());
 
-                    }
-                }
-            } catch (PhidgetException ex) {
-                JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
-            }
-        }
+		    }
+		}
+	    } catch (PhidgetException ex) {
+		JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
+	    }
+	}
     }//GEN-LAST:event_DigiOutCheckActionPerformed
 
     private void StopTraceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StopTraceActionPerformed
-        // TODO add your handling code here:
-        lineChartPanel.stop();
-        if (evt.getSource() == StopTrace) {
-            //global_vars.MaxX=0;
-            System.out.println("Hello just stopped" + " max=" + global_vars.MaxX);
+	// TODO add your handling code here:
+	lineChartPanel.stop();
+	if (evt.getSource() == StopTrace) {
+	    //global_vars.MaxX=0;
+	    System.out.println("Hello just stopped" + " max=" + global_vars.MaxX);
 
-        }
-        StopTrace.setEnabled(false);
-        jButton1.setEnabled(true);
+	}
+	StopTrace.setEnabled(false);
+	jButton1.setEnabled(true);
     }//GEN-LAST:event_StopTraceActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String scaleString = scale.getText();
-        String offSet = Yoffset.getText();
-        lineChartPanel.setScale(Integer.parseInt(scaleString));
-        lineChartPanel.setOffset(Integer.parseInt(offSet));
-        lineChartPanel.start();
-        jButton1.setEnabled(false);
-        StopTrace.setEnabled(true);
+	String scaleString = scale.getText();
+	String offSet = Yoffset.getText();
+	lineChartPanel.setScale(Integer.parseInt(scaleString));
+	lineChartPanel.setOffset(Integer.parseInt(offSet));
+	lineChartPanel.start();
+	jButton1.setEnabled(false);
+	StopTrace.setEnabled(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        //if (global_vars.value_Read > 30) StartTrace();
+	//if (global_vars.value_Read > 30) StartTrace();
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void ResolutionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResolutionActionPerformed
-        // TODO add your handling code here:
-        String InResolution = Resolution.getText();
-        global_vars.Resolution_ms = Integer.parseInt(InResolution);
-        if (global_vars.Resolution_ms == 0) {
-            global_vars.Resolution_ms = 25;
-        }
-        System.out.println("Resolution here I found............... " + global_vars.Resolution_ms);
+	// TODO add your handling code here:
+	String InResolution = Resolution.getText();
+	global_vars.Resolution_ms = Integer.parseInt(InResolution);
+	if (global_vars.Resolution_ms == 0) {
+	    global_vars.Resolution_ms = 25;
+	}
+	System.out.println("Resolution here I found............... " + global_vars.Resolution_ms);
     }//GEN-LAST:event_ResolutionActionPerformed
 
     private void YoffsetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YoffsetActionPerformed
-        // TODO add your handling code here:
-        String InYoffset = Yoffset.getText();
-        global_vars.Yoffset = Integer.parseInt(InYoffset);
-        System.out.println("Offset here I found............... " + InYoffset + "  integer is: " + global_vars.Yoffset);
+	// TODO add your handling code here:
+	String InYoffset = Yoffset.getText();
+	global_vars.Yoffset = Integer.parseInt(InYoffset);
+	System.out.println("Offset here I found............... " + InYoffset + "  integer is: " + global_vars.Yoffset);
     }//GEN-LAST:event_YoffsetActionPerformed
 
     private void scaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleActionPerformed
-        // TODO add your handling code here:
+	// TODO add your handling code here:
     }//GEN-LAST:event_scaleActionPerformed
 
     /**
@@ -985,26 +987,26 @@ public class InterfaceKit extends javax.swing.JFrame {
      */
     private void sensitivityScrlStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sensitivityScrlStateChanged
 
-        if (sensitivityScrl.isEnabled()) {
-            try {
-                if (sensitivityScrl.isEnabled() && ifk.isAttached()) {
-                    for (int i = 0; i < ifk.getSensorCount(); i++) {
-                        ifk.setSensorChangeTrigger(i, sensitivityScrl.getValue());
-                    }
-                    sensitivityTxt.setText(Integer.toString(sensitivityScrl.getValue()));
-                }
-            } catch (PhidgetException ex) {
-                JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
-            }
-        }
+	if (sensitivityScrl.isEnabled()) {
+	    try {
+		if (sensitivityScrl.isEnabled() && ifk.isAttached()) {
+		    for (int i = 0; i < ifk.getSensorCount(); i++) {
+			ifk.setSensorChangeTrigger(i, sensitivityScrl.getValue());
+		    }
+		    sensitivityTxt.setText(Integer.toString(sensitivityScrl.getValue()));
+		}
+	    } catch (PhidgetException ex) {
+		JOptionPane.showMessageDialog(this, ex.getDescription(), "Phidget Error" + ex.getErrorNumber(), JOptionPane.ERROR_MESSAGE);
+	    }
+	}
     }//GEN-LAST:event_sensitivityScrlStateChanged
 
     private void sensitivityTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sensitivityTxtActionPerformed
-        // TODO add your handling code here:
+	// TODO add your handling code here:
     }//GEN-LAST:event_sensitivityTxtActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+	// TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
@@ -1014,29 +1016,29 @@ public class InterfaceKit extends javax.swing.JFrame {
      *
      */
     private void makeDigiInArray() {
-        digiInArray = new JCheckBox[16];
+	digiInArray = new JCheckBox[16];
 
-        digiInArray[0] = jCheckBox1;
-        digiInArray[1] = jCheckBox2;
-        digiInArray[2] = jCheckBox3;
-        digiInArray[3] = jCheckBox4;
-        digiInArray[4] = jCheckBox5;
-        digiInArray[5] = jCheckBox6;
-        digiInArray[6] = jCheckBox7;
-        digiInArray[7] = jCheckBox8;
-        digiInArray[8] = jCheckBox9;
-        digiInArray[9] = jCheckBox10;
-        digiInArray[10] = jCheckBox11;
-        digiInArray[11] = jCheckBox12;
-        digiInArray[12] = jCheckBox13;
-        digiInArray[13] = jCheckBox14;
-        digiInArray[14] = jCheckBox15;
-        digiInArray[15] = jCheckBox16;
+	digiInArray[0] = jCheckBox1;
+	digiInArray[1] = jCheckBox2;
+	digiInArray[2] = jCheckBox3;
+	digiInArray[3] = jCheckBox4;
+	digiInArray[4] = jCheckBox5;
+	digiInArray[5] = jCheckBox6;
+	digiInArray[6] = jCheckBox7;
+	digiInArray[7] = jCheckBox8;
+	digiInArray[8] = jCheckBox9;
+	digiInArray[9] = jCheckBox10;
+	digiInArray[10] = jCheckBox11;
+	digiInArray[11] = jCheckBox12;
+	digiInArray[12] = jCheckBox13;
+	digiInArray[13] = jCheckBox14;
+	digiInArray[14] = jCheckBox15;
+	digiInArray[15] = jCheckBox16;
 
-        for (int i = 0; i < 16; i++) {
-            digiInArray[i].setVisible(true);
-            digiInArray[i].setEnabled(false);
-        }
+	for (int i = 0; i < 16; i++) {
+	    digiInArray[i].setVisible(true);
+	    digiInArray[i].setEnabled(false);
+	}
     }
 
     /**
@@ -1046,28 +1048,28 @@ public class InterfaceKit extends javax.swing.JFrame {
      *
      */
     private void makeDigiOutArray() {
-        digiOutArray = new JCheckBox[16];
+	digiOutArray = new JCheckBox[16];
 
-        digiOutArray[0] = jCheckBox17;
-        digiOutArray[1] = jCheckBox18;
-        digiOutArray[2] = jCheckBox19;
-        digiOutArray[3] = jCheckBox20;
-        digiOutArray[4] = jCheckBox21;
-        digiOutArray[5] = jCheckBox22;
-        digiOutArray[6] = jCheckBox23;
-        digiOutArray[7] = jCheckBox24;
-        digiOutArray[8] = jCheckBox25;
-        digiOutArray[9] = jCheckBox26;
-        digiOutArray[10] = jCheckBox27;
-        digiOutArray[11] = jCheckBox28;
-        digiOutArray[12] = jCheckBox29;
-        digiOutArray[13] = jCheckBox30;
-        digiOutArray[14] = jCheckBox31;
-        digiOutArray[15] = jCheckBox32;
+	digiOutArray[0] = jCheckBox17;
+	digiOutArray[1] = jCheckBox18;
+	digiOutArray[2] = jCheckBox19;
+	digiOutArray[3] = jCheckBox20;
+	digiOutArray[4] = jCheckBox21;
+	digiOutArray[5] = jCheckBox22;
+	digiOutArray[6] = jCheckBox23;
+	digiOutArray[7] = jCheckBox24;
+	digiOutArray[8] = jCheckBox25;
+	digiOutArray[9] = jCheckBox26;
+	digiOutArray[10] = jCheckBox27;
+	digiOutArray[11] = jCheckBox28;
+	digiOutArray[12] = jCheckBox29;
+	digiOutArray[13] = jCheckBox30;
+	digiOutArray[14] = jCheckBox31;
+	digiOutArray[15] = jCheckBox32;
 
-        for (int i = 0; i < 16; i++) {
-            digiOutArray[i].setVisible(true);
-        }
+	for (int i = 0; i < 16; i++) {
+	    digiOutArray[i].setVisible(true);
+	}
     }
 
     /**
@@ -1078,20 +1080,20 @@ public class InterfaceKit extends javax.swing.JFrame {
      *
      */
     private void makeSensorInArray() {
-        sensorInArray = new JTextField[8];
+	sensorInArray = new JTextField[8];
 
-        sensorInArray[0] = jTextField1;
-        sensorInArray[1] = jTextField2;
-        sensorInArray[2] = jTextField3;
-        sensorInArray[3] = jTextField4;
-        sensorInArray[4] = jTextField5;
-        sensorInArray[5] = jTextField6;
-        sensorInArray[6] = jTextField7;
-        sensorInArray[7] = jTextField8;
+	sensorInArray[0] = jTextField1;
+	sensorInArray[1] = jTextField2;
+	sensorInArray[2] = jTextField3;
+	sensorInArray[3] = jTextField4;
+	sensorInArray[4] = jTextField5;
+	sensorInArray[5] = jTextField6;
+	sensorInArray[6] = jTextField7;
+	sensorInArray[7] = jTextField8;
 
-        for (int i = 0; i < 8; i++) {
-            sensorInArray[i].setVisible(true);
-        }
+	for (int i = 0; i < 8; i++) {
+	    sensorInArray[i].setVisible(true);
+	}
 
     }
 
@@ -1099,24 +1101,26 @@ public class InterfaceKit extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        runArgs = args;
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                    InterfaceKit interfaceKit = new InterfaceKit();
-                    interfaceKit.setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+	runArgs = args;
+	java.awt.EventQueue.invokeLater(new Runnable() {
+	    public void run() {
+		try {
+		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		    InterfaceKit interfaceKit = new InterfaceKit();
+		    interfaceKit.setPreferredSize(new Dimension(1300, 800));
+		    interfaceKit.setMinimumSize(new Dimension(1400, 800));
+		    interfaceKit.setVisible(true);
+		} catch (ClassNotFoundException ex) {
+		    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (InstantiationException ex) {
+		    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IllegalAccessException ex) {
+		    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (UnsupportedLookAndFeelException ex) {
+		    Logger.getLogger(InterfaceKit.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+	});
 
     }
 
