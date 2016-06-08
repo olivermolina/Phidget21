@@ -43,10 +43,12 @@ public class LineChartPanel extends JPanel {
     Scene scene;
     NumberAxis xAxis;
     NumberAxis yAxis;
+    InterfaceKit parent;
 
     private static final Object MOUSE_TRIGGER_LOCATION = "tooltip-last-location";
 
-    public LineChartPanel() {
+    public LineChartPanel(InterfaceKit parent) {
+        this.parent = parent;
         initComponents();
     }
 
@@ -177,7 +179,12 @@ public class LineChartPanel extends JPanel {
         public void run() {
             try {
                 Random random = new Random();
-                final int yValue = global_vars.value_Read == 0 ? random.nextInt(300) : global_vars.value_Read;
+                int yValue = global_vars.value_Read;
+                if (parent.jTextField1.getText().isEmpty()) {
+                    yValue = global_vars.value_Read == 0 ? random.nextInt(300) : global_vars.value_Read;
+
+                }
+                
                 ySeriesData.add(yValue);
 
                 //find maxvalue

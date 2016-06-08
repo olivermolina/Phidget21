@@ -132,7 +132,7 @@ public class InterfaceKit extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        lineChartPanel = new listeners.LineChartPanel();
+        lineChartPanel = new listeners.LineChartPanel(this);
         jButton1 = new javax.swing.JButton();
         StopTrace = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
@@ -1231,7 +1231,7 @@ public class InterfaceKit extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
+    public javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
