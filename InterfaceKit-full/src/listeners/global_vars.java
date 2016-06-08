@@ -22,5 +22,5 @@ public static int scale=1;
 public static int Yoffset;
 public static int MaxX=900;
 
-public static int Resolution_ms=30;
+public static int Resolution_ms=300;
 }

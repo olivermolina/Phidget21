@@ -14,18 +14,18 @@ import java.util.concurrent.ThreadFactory;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.chart.XYChart.Data;
+import javax.swing.JPanel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
-import javax.swing.JPanel;
-import javafx.event.EventHandler;
-import javafx.scene.*;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 public class LineChartPanel extends JPanel {
 
@@ -35,7 +35,7 @@ public class LineChartPanel extends JPanel {
     private int xSeriesData = 0;
     private ConcurrentLinkedQueue<Number> ySeriesData = new ConcurrentLinkedQueue<>();
     private int maxValu;
-    int Resolution_ms = 500;
+    int Resolution_ms = 30;
     LineChart<Number, Number> lineChart;
     Scene scene;
     NumberAxis xAxis;
@@ -55,6 +55,34 @@ public class LineChartPanel extends JPanel {
 
 	    @Override
 	    public void run() {
+		Tooltip t = new Tooltip();
+		t.setOnShowing(e -> {
+		    Point2D screen = (Point2D) t.getProperties().get(MOUSE_TRIGGER_LOCATION);
+		    if (screen == null) {
+			return;
+		    }
+		    XYChart chart = series.getChart();
+		    double localX = chart.getXAxis().screenToLocal(screen).getX();
+		    double localY = chart.getYAxis().screenToLocal(screen).getY();
+		    Object xValue = chart.getXAxis().getValueForDisplay(localX);
+		    Object yValue = chart.getYAxis().getValueForDisplay(localY);
+		    String s = String.valueOf(yValue);
+		    double d = Double.parseDouble(s);
+		    int i = (int) d;
+		    t.textProperty().set("Vertical Y value: " + i);
+		});
+		series.nodeProperty().addListener(new ChangeListener<Node>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Node> arg0, Node arg1,
+			    Node node) {
+			Tooltip.install(node, t);
+			node.setOnMouseMoved(e -> {
+			    Point2D screen = new Point2D(e.getScreenX(), e.getScreenY());
+			    t.getProperties().put(MOUSE_TRIGGER_LOCATION, screen);
+			});
+			series.nodeProperty().removeListener(this);
+		    }
+		});
 
 		xAxis = new NumberAxis();
 		xAxis.setLabel("Trace Count");
@@ -171,51 +199,22 @@ public class LineChartPanel extends JPanel {
     }
 
     private void addDataToSeries() {
+
 	for (int i = 0; i < global_vars.MaxX; i++) {
 	    if (ySeriesData.isEmpty()) {
 		break;
 	    }
 	    Number yData = ySeriesData.remove();
 	    Data data = new XYChart.Data<>(xSeriesData++, yData);
-	    HoveredThresholdNode node = new HoveredThresholdNode(yData);
-	    data.setNode(node);
+	    data.nodeProperty().addListener(new ChangeListener<Node>() {
+		@Override
+		public void changed(ObservableValue<? extends Node> arg0, Node arg1, Node arg2) {
+		    Tooltip t = new Tooltip("Tooltip: " + yData + '\n' + xSeriesData);
+		    Tooltip.install(arg2, t);
+		    data.nodeProperty().removeListener(this);
+		}
+	    });
 	    series.getData().add(data);
-	}
-    }
-
-    class HoveredThresholdNode extends StackPane {
-
-	HoveredThresholdNode(Number value) {
-	    setPrefSize(15, 15);
-
-	    final Label label = createDataThresholdLabel(value);
-
-	    setOnMouseEntered(new EventHandler<MouseEvent>() {
-		@Override
-		public void handle(MouseEvent mouseEvent) {
-		    getChildren().setAll(label);
-		    setCursor(Cursor.NONE);
-		    toFront();
-		}
-	    });
-	    setOnMouseExited(new EventHandler<MouseEvent>() {
-		@Override
-		public void handle(MouseEvent mouseEvent) {
-		    getChildren().clear();
-		    setCursor(Cursor.CROSSHAIR);
-		}
-	    });
-	}
-
-	private Label createDataThresholdLabel(Number value) {
-	    final Label label = new Label(value + "");
-	    label.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
-	    label.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
-
-	    label.setTextFill(Color.FORESTGREEN);
-
-	    label.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-	    return label;
 	}
     }
 }
