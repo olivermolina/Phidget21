@@ -33,10 +33,10 @@ import javafx.scene.layout.StackPane;
 public class LineChartPanel extends JPanel {
 
     private JFXPanel fxPanel;
-    private XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> series;
     private ExecutorService executor;
     private int xSeriesData = 0;
-    private ConcurrentLinkedQueue<Number> ySeriesData = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Number> ySeriesData;
     private int maxValu;
     int Resolution_ms = 30;
     LineChart<Number, Number> lineChart;
@@ -55,6 +55,8 @@ public class LineChartPanel extends JPanel {
     private void initComponents() {
         fxPanel = new JFXPanel();
         fxPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+        series = new XYChart.Series<>();
+        ySeriesData = new ConcurrentLinkedQueue<>();
         this.add(fxPanel);
         Platform.runLater(new Runnable() {
 
@@ -174,6 +176,13 @@ public class LineChartPanel extends JPanel {
         executor.shutdownNow();
     }
 
+    public void reset() {
+        removeAll();
+        initComponents();
+        revalidate();
+        repaint();
+    }
+
     private class AddToQueue implements Runnable {
 
         public void run() {
@@ -184,7 +193,7 @@ public class LineChartPanel extends JPanel {
                     yValue = global_vars.value_Read == 0 ? random.nextInt(300) : global_vars.value_Read;
 
                 }
-                
+
                 ySeriesData.add(yValue);
 
                 //find maxvalue

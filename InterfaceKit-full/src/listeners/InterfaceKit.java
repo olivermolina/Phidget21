@@ -139,6 +139,7 @@ public class InterfaceKit extends javax.swing.JFrame {
         startTime = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         endTime = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("InterfaceKit - full");
@@ -787,6 +788,14 @@ public class InterfaceKit extends javax.swing.JFrame {
 
         endTime.setEditable(false);
 
+        jButton2.setBackground(new java.awt.Color(0, 204, 0));
+        jButton2.setText("Reset");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -800,7 +809,9 @@ public class InterfaceKit extends javax.swing.JFrame {
                         .add(jButton1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(StopTrace)
-                        .add(18, 18, 18)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jButton2)
+                        .add(44, 44, 44)
                         .add(jLabel13)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(startTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 155, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -822,9 +833,10 @@ public class InterfaceKit extends javax.swing.JFrame {
                     .add(jLabel13)
                     .add(startTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel14)
-                    .add(endTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(endTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jButton2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
         );
 
         pack();
@@ -978,6 +990,7 @@ public class InterfaceKit extends javax.swing.JFrame {
         Date now = calendar.getTime();
         Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
         endTime.setText(currentTimestamp.toString());
+        
 
     }//GEN-LAST:event_StopTraceActionPerformed
 
@@ -1053,6 +1066,11 @@ public class InterfaceKit extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        lineChartPanel.reset();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * this method creates the digital input array that corresponds to the group
@@ -1177,6 +1195,7 @@ public class InterfaceKit extends javax.swing.JFrame {
     private javax.swing.JTextField attachedTxt;
     private javax.swing.JTextField endTime;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox10;
     private javax.swing.JCheckBox jCheckBox11;
