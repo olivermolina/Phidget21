@@ -6,8 +6,6 @@
 package listeners;
 
 import java.awt.Dimension;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -21,9 +19,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
-import javafx.scene.control.Tooltip;
 import javax.swing.JPanel;
+import javafx.event.EventHandler;
+import javafx.scene.*;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class LineChartPanel extends JPanel {
 
@@ -35,6 +37,11 @@ public class LineChartPanel extends JPanel {
     private int maxValu;
     int Resolution_ms = 500;
     LineChart<Number, Number> lineChart;
+    Scene scene;
+    NumberAxis xAxis;
+    NumberAxis yAxis;
+
+    private static final Object MOUSE_TRIGGER_LOCATION = "tooltip-last-location";
 
     public LineChartPanel() {
 	initComponents();
@@ -49,9 +56,9 @@ public class LineChartPanel extends JPanel {
 	    @Override
 	    public void run() {
 
-		final NumberAxis xAxis = new NumberAxis();
+		xAxis = new NumberAxis();
 		xAxis.setLabel("Trace Count");
-		final NumberAxis yAxis = new NumberAxis();
+		yAxis = new NumberAxis();
 		yAxis.setLabel("Analog In Values");
 
 		// Create a LineChart
@@ -60,6 +67,7 @@ public class LineChartPanel extends JPanel {
 		    @Override
 		    protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) {
 		    }
+
 		};
 
 		lineChart.setAnimated(false);
@@ -70,9 +78,10 @@ public class LineChartPanel extends JPanel {
 		series.setName("Analog In");
 
 		// Add Chart Series
-		lineChart.getData().addAll(series);		
-		populateTooltips(lineChart);
-		Scene scene = new Scene(lineChart, 1300, 400);
+		lineChart.getData().addAll(series);
+		StackPane root = new StackPane();
+		root.getChildren().add(lineChart);
+		scene = new Scene(root, 1300, 400);
 		scene.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
 		fxPanel.setScene(scene);
 		LineChartPanel.this.repaint();
@@ -118,12 +127,14 @@ public class LineChartPanel extends JPanel {
 
 	AddToQueue addToQueue = new AddToQueue();
 	executor.execute(addToQueue);
+
 	//-- Prepare Timeline
 	prepareTimeline();
+
     }
 
     public void stop() {
-	executor.shutdown();
+	executor.shutdownNow();
     }
 
     private class AddToQueue implements Runnable {
@@ -140,14 +151,15 @@ public class LineChartPanel extends JPanel {
 		}
 
 		Thread.sleep(global_vars.Resolution_ms);
+
 		executor.execute(this);
 	    } catch (InterruptedException ex) {
-		ex.printStackTrace();
+
 	    }
 	}
     }
-
 //-- Timeline gets called in the JavaFX Main thread
+
     private void prepareTimeline() {
 	// Every frame to take any data from queue and add to chart
 	new AnimationTimer() {
@@ -159,39 +171,51 @@ public class LineChartPanel extends JPanel {
     }
 
     private void addDataToSeries() {
-
-	SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-	Date date = new Date();
-	for (int i = 0; i < global_vars.MaxX; i++) { //-- add 20 numbers to the plot+
+	for (int i = 0; i < global_vars.MaxX; i++) {
 	    if (ySeriesData.isEmpty()) {
 		break;
 	    }
-	    date.setTime(date.getTime() + i * 11111);
-	    Data data = new XYChart.Data<>(xSeriesData++, ySeriesData.remove());
+	    Number yData = ySeriesData.remove();
+	    Data data = new XYChart.Data<>(xSeriesData++, yData);
+	    HoveredThresholdNode node = new HoveredThresholdNode(yData);
+	    data.setNode(node);
 	    series.getData().add(data);
 	}
     }
 
-    private void populateTooltip(final Series<Number, Number> series, final Data<Number, Number> data) {
+    class HoveredThresholdNode extends StackPane {
 
-	if (data == null) {
-	    return;
+	HoveredThresholdNode(Number value) {
+	    setPrefSize(15, 15);
+
+	    final Label label = createDataThresholdLabel(value);
+
+	    setOnMouseEntered(new EventHandler<MouseEvent>() {
+		@Override
+		public void handle(MouseEvent mouseEvent) {
+		    getChildren().setAll(label);
+		    setCursor(Cursor.NONE);
+		    toFront();
+		}
+	    });
+	    setOnMouseExited(new EventHandler<MouseEvent>() {
+		@Override
+		public void handle(MouseEvent mouseEvent) {
+		    getChildren().clear();
+		    setCursor(Cursor.CROSSHAIR);
+		}
+	    });
 	}
-	final Tooltip tooltip = new Tooltip(
-		series.getName()
-		+ System.lineSeparator()
-		+ data.getYValue()
-		+ System.lineSeparator());
 
-	Tooltip.install(data.getNode(), tooltip);
-    }
+	private Label createDataThresholdLabel(Number value) {
+	    final Label label = new Label(value + "");
+	    label.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
+	    label.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
 
-    private void populateTooltips(final LineChart<Number, Number> lineChart) {
-	
-	for (final Series<Number, Number> series : lineChart.getData()) {
-	    for (final Data<Number, Number> data : series.getData()) {
-		populateTooltip(series, data);
-	    }
+	    label.setTextFill(Color.FORESTGREEN);
+
+	    label.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
+	    return label;
 	}
     }
 }
